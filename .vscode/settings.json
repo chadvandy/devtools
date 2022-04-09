@@ -1,0 +1,13 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#1F3037",
+        "titleBar.activeBackground": "#2B434D",
+        "titleBar.activeForeground": "#F9FBFC"
+    },
+    "Lua.workspace.library": [
+        // ".vscode/def.lua",
+        "S:/TOTALWARDUMPS/WH3/RC/script",
+        "script/_lib/mod",
+        // "script/vlib/helpers",
+    ],
+}

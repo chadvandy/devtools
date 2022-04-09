@@ -1,0 +1,55 @@
+---@class UIC_Address:userdata
+---@alias docking_points "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
+
+---@class UIComponent
+---@field SimulateLClick fun(self:UIComponent)
+---@field SetState fun(self:UIComponent, state:string)
+---@field SetStateText fun(self:UIComponent, text:string)
+---@field Resize fun(self:UIComponent, w:number, h:number)
+---@field MoveTo fun(self:UIComponent, x:number, y:number)
+---@field SetTooltipText fun(self:UIComponent, t:string, all_states:boolean)
+---@field SetVisible fun(self:UIComponent, is:boolean)
+---@field SetInteractive fun(self:UIComponent, is:boolean)
+---@field SetDisabled fun(self:UIComponent, is:boolean)
+---@field SetProperty fun(self:UIComponent, key:any, value:any)
+---@field SetDockingPoint fun(UIComponent, point:docking_points)
+---@field SetDockOffset fun(UIComponent, x:number, y:number)
+---@field SetCanResizeWidth fun(UIComponent, can:boolean)
+---@field SetCanResizeHeight fun(UIComponent, can:boolean)
+---@field SetMoveable fun(UIComponent, boolean)
+---@field SetImagePath fun(UIComponent, img:string, index:number)
+---@field Width fun(UIComponent):number
+---@field Height fun(UIComponent):number
+---@field CreateComponent fun(self:UIComponent, key:string, template:string|nil):UIC_Address
+---@field UnLockPriority fun(UIComponent)
+---@field Id fun(self:UIComponent):string
+---@field Parent fun(self:UIComponent):UIC_Address
+---@field PropagatePriority fun(self:UIComponent, priority:number)
+---@field LockPriority fun(self:UIComponent)
+---@field Dimensions fun(self:UIComponent):number,number
+---@field Bounds fun(self:UIComponent):number,number
+---@field DestroyChildren fun(self:UIComponent)
+---@field Visible fun(self:UIComponent):boolean
+---@field CurrentState fun(self:UIComponent):string
+---@field RemoveTopMost fun(self:UIComponent)
+---@field GetStateText fun(self:UIComponent):string
+---@field TextDimensionsForText fun(self:UIComponent, text:string):number,number
+---@field ResizeTextResizingComponentToInitialSize fun(self:UIComponent, w:number, h:number)
+---@field Find fun(self:UIComponent, i:number|string):UIC_Address
+---@field Priority fun(self:UIComponent):number
+---@field Position fun(self:UIComponent):number,number
+---@field GetDockOffset fun(self:UIComponent):number,number
+---@field RegisterTopMost fun(self:UIComponent)
+---@field Layout fun(self:UIComponent)
+---@field ChildCount fun(self:UIComponent):number
+---@field GetCurrentStateImageDimensions fun(self:UIComponent, img_index:number):number,number
+---@field ResizeCurrentStateImage fun(self:UIComponent, img_index:number, w:number,h:number)
+---@field StartPulseHighlight fun(self:UIComponent, intensity:number, state:string)
+---@field StopPulseHighlight fun(self:UIComponent)
+---@field Address fun(self:UIComponent):UIC_Address
+---@field Adopt fun(self:UIComponent, address: UIC_Address)
+---@field Highlight fun(self:UIComponent, boolean, boolean)
+---@field SetCanResizeCurrentStateImageWidth fun(self:UIComponent, number, boolean)
+
+---@return UIComponent ReturnedComponent
+function UIComponent(address) end
