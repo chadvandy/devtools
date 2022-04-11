@@ -223,6 +223,9 @@ function lua_console:execute()
 		self:printf("[[col:red]] Error: %s[[/col]]", err)
 		return;
 	end
+
+	local env = core:get_env()	
+    setfenv(func, env);
     
     local ok, result = pcall(func);
 
