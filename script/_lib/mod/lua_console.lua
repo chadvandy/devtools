@@ -140,6 +140,8 @@ function lua_console:set_repeat_callback(b)
 	end
 end
 
+--- TODO print out to a logfile as well.
+
 --- TODO trigger errors as you type?
 --- TODO stack print results!
 --- Make use of the error popup to print return values
@@ -221,11 +223,6 @@ function lua_console:execute()
 		self:printf("[[col:red]] Error: %s[[/col]]", err)
 		return;
 	end
-
-	local env = core:get_env()
-	env.console_print = function(t) self:print(t) end
-	
-    setfenv(func, env);
     
     local ok, result = pcall(func);
 
@@ -323,19 +320,31 @@ function lua_console:init_listeners()
 	)
 end
 
-core:add_ui_created_callback(
-	function()
-		-- create the console uicomponent
-		-- local ok, err = pcall(function()
-		if core:is_campaign() then 
-			cm:add_post_first_tick_callback(function()
-				lua_console:create()
-			end)
-		else
-			lua_console:create()
-		end
-		-- end) if not ok then out(err) end
+function console_print(t)
+	lua_console:print(t)
+end
 
-		out("Created")
-	end
-);
+function console_printf(t, ...)
+	lua_console:printf(t, ...)
+end
+
+if not core:is_battle() then
+	core:add_ui_created_callback(
+		function()
+			-- create the console uicomponent
+			-- local ok, err = pcall(function()
+			if core:is_campaign() then 
+				cm:add_post_first_tick_callback(function()
+					lua_console:create()
+				end)
+			elseif core:is_frontend() then
+				lua_console:create()
+			end
+			-- end) if not ok then out(err) end
+	
+			out("Created")
+		end
+	);
+else
+	bm:register_phase_change_callback("Deployment", function() lua_console:create() end)
+end
