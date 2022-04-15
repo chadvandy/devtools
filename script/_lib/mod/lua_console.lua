@@ -224,7 +224,7 @@ function lua_console:execute()
 		return;
 	end
 
-	local env = core:get_env()	
+	local env = core:get_env()
     setfenv(func, env);
     
     local ok, result = pcall(func);
@@ -329,6 +329,20 @@ end
 
 function console_printf(t, ...)
 	lua_console:printf(t, ...)
+end
+
+function t_get(t, i)
+	if not is_table(t) then return end
+	if not is_number(i) and not is_string(i) then return end
+
+	return t[i]
+end
+
+function t_set(t, i, v)
+	if not is_table(t) then return end
+	if not is_number(i) and not is_string(i) then return end
+	
+	t[i] = v
 end
 
 if not core:is_battle() then
