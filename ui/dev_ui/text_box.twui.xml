@@ -48,9 +48,6 @@
 			offset="690.00,80.00"
 			allowhorizontalresize="false"
 			allowverticalresize="false"
-			docking="Top Center"
-			dock_offset="0.00,80.00"
-			component_anchor_point="0.50,0.00"
 			priority="200"
 			tooltipslocalised="true"
 			uniqueguid="21D9DAFC-FA1D-4EE9-ADDF5BE39B1EB7B5"
@@ -70,14 +67,6 @@
 					</child_m_user_properties>
 				</callback_with_context>
 			</callbackwithcontextlist>
-			<userproperties>
-				<property
-					name="min_text_height"
-					value="30"/>
-				<property
-					name="min_text_width"
-					value="610"/>
-			</userproperties>
 			<componentimages>
 				<component_image
 					this="08E5DD80-69E6-4870-B65EC62A0866BCB7"
@@ -88,10 +77,11 @@
 				<newstate
 					this="8598FA8D-68AF-49A6-B9E2B45DF7730DC3"
 					name="NewState"
-					width="220"
-					height="28"
+					width="16"
+					height="16"
 					text=""
-					textxoffset="6.00,0.00"
+					textxoffset="0.00,0.00"
+					textyoffset="0.00,0.00"
 					texthbehaviour="Never split"
 					font_m_size="12"
 					font_m_colour="#FFF8D7FF"
@@ -99,16 +89,6 @@
 					fontcat_name="fe_default_text"
 					interactive="true"
 					uniqueguid="8598FA8D-68AF-49A6-B9E2B45DF7730DC3">
-					<!-- <imagemetrics>
-						<image
-							this="FF70C4AA-084A-45DE-A6AF7566F95F18A6"
-							uniqueguid="FF70C4AA-084A-45DE-A6AF7566F95F18A6"
-							componentimage="08E5DD80-69E6-4870-B65EC62A0866BCB7"
-							width="220"
-							height="28"
-							tile="true"
-							margin="4.00,4.00,4.00,4.00"/>
-					</imagemetrics> -->
 				</newstate>
 			</states>
 		</text_box>

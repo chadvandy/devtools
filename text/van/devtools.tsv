@@ -1,0 +1,4 @@
+key	text	tooltip
+#Loc PackedFile;1;text/van/devtools.loc		
+uied_component_texts_localised_string_button_add_line_Tooltip_10003a	Add a line	true
+uied_component_texts_localised_string_button_remove_line_Tooltip_10003b	Remove a line (text will be preserved if you add it later)	true
