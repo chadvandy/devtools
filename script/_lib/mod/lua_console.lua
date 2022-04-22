@@ -12,7 +12,8 @@ out("qa_console.lua loaded");
 local lua_console = {
 	_name = "lua_console",
 	_layout_path = "ui/dev_ui/!qa_console",
-	_shortcut_key = "script_shift_F3", --- TODO expose to MCT
+	_shortcut_to_open = "script_shift_F3", --- TODO expose to MCT
+	_shortcut_to_execute = "script_shift_F4", --- TODO expose to MCT
 
 	_uic = nil,
 
@@ -52,6 +53,8 @@ function lua_console:create()
 	text_popup:SetDockingPoint(8)
 	text_popup:SetDockOffset(0, 60)
 	text_popup:SetVisible(false)
+
+	text_popup:SetStateText("")
 
 	local bottom_bar = find_uicomponent(self._uic, "bottom_bar_container")
 	local container = find_uicomponent(bottom_bar, "button_add_remove_container")
@@ -108,6 +111,13 @@ function lua_console:create()
 
 	--- TEMP
 	button_copy:SetTooltipText("Copy the Lua Console to a local file.\n[[col:red]]There's currently a bug where you can't copy anything with ' or \" in it, making it functionally useless. For now, this prints the Lua Console to a file at Total War WARHAMMER III/lua_console_code.lua[[/col]]", true)
+
+	-- local button_close = find_uicomponent(self._uic, "title_bar", "button_close_container", "button_close")
+	-- local button_settings = UIComponent(button_close:CopyComponent("button_settings"))
+	-- button_settings:SetDockingPoint(1)
+	-- button_settings:SetDockOffset(-button_close:Width() - 10, 0)
+	-- button_settings:SetImagePath("ui/skins/warhammer3/icon_options.png", 0)
+	-- button_settings:SetTooltipText("Open the Settings panel.", true)
 
 	self:setup_text_input()
 	self:init_listeners()
@@ -239,29 +249,6 @@ function lua_console:get_text_input(i)
 
 	return text_input
 end
-
--- function lua_console:set_repeat_callback(b)
--- 	---@type timer_manager
--- 	local tm = core:get_static_object("timer_manager")
--- 	if b == true then
--- 		-- hook up the repeat callback
--- 		out("Setting up repeat callback")
--- 		tm:repeat_real_callback(function()
--- 			local line = self:get_text_input(self._current_line)
--- 			local txt = line:GetStateText()
--- 			local w = line:Width() - 20
--- 			local tw = line:TextDimensionsForText(txt)
-
--- 			if tw >= w then
--- 				self:set_current_line(self._current_line + 1)
--- 			end
--- 		end, 10, "check_lua_console")
--- 	else
--- 		-- kill it
--- 		out("Removing repeat callback")
--- 		tm:remove_real_callback("check_lua_console")
--- 	end
--- end
 
 --- TODO print out to a logfile as well.
 
@@ -417,6 +404,8 @@ function lua_console:clear_text()
 		local line = self:get_text_input(i)
 		line:SetStateText("")
 	end
+	
+	self:set_current_line(1)
 end
 
 function lua_console:execute()
@@ -458,15 +447,39 @@ function lua_console:execute()
 	end;
 end
 
+--- TODO do I even want to do this when I can really just MCT?
+function lua_console:open_settings_panel()
+	local panel = core:get_or_create_component("settings_panel", "ui/templates/panel_frame", self._uic)
+	
+	local w,h = self._uic:Dimensions()
+	panel:Resize(w*1.5, h*1.3) 
+	panel:SetDockingPoint(5) panel:SetDockOffset(0, 0)
+
+	local title = core:get_or_create_component("title", "ui/templates/panel_title", panel)
+	title:SetDockingPoint(2) title:SetDockOffset(0, 20)
+
+	local text = core:get_or_create_component("text", "ui/dev_ui/text", title)
+	text:SetDockingPoint(5) text:SetDockOffset(0, 0)
+	text:SetStateText("Lua Console Settings") --- TODO font change
+
+	
+end
+
 function lua_console:init_listeners()
 	core:add_listener(
 		"lua_console_listener",
 		"ShortcutPressed",
 		function(context)
-			return context.string == lua_console._shortcut_key
+			return context.string == lua_console._shortcut_to_open or context.string == lua_console._shortcut_to_execute
 		end,
 		function(context)
-			lua_console:swap_visibility()
+			if context.string == self._shortcut_to_open then
+				lua_console:swap_visibility()
+			elseif context.string == self._shortcut_to_execute then
+				if lua_console:get_uic():Visible() then
+					lua_console:execute()
+				end
+			end
 		end,
 		true
 	);
@@ -502,6 +515,8 @@ function lua_console:init_listeners()
 				local ok, err = pcall(function()
 					lua_console:paste_from_clipboard()
 				end) if not ok then ModLog(err) end
+			elseif id == "button_settings" then
+				lua_console:open_settings_panel()
 			end
 		end,
 		true
