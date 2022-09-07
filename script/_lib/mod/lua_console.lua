@@ -142,22 +142,23 @@ function lua_console:setup_text_input()
 end
 
 --- TODO dynamically resize the text input so it's always 6px to the right of the :, so it doesn't look weird on different numbers
+---@return UIC
 function lua_console:create_text_line(i)
 	local listview = find_uicomponent(self:get_uic(), "listview")
 	local text_box = find_uicomponent(listview, "list_clip", "list_box")
 
 	if not i then i = self._num_lines + 1 end
-	if i >= self._max_lines then return end
+	if i >= self._max_lines then return find_uicomponent(text_box, "text_input_"..self._max_lines) end
 
 	local extant = find_uicomponent(text_box, "text_input_"..i)
 	if is_uicomponent(extant) then
-		if extant:Visible() then return end
+		if extant:Visible() then return extant end
 		extant:SetVisible(true)
 		self._last_visible_line = i
-		return
+		return extant
 	end
 
-	---@type UIComponent
+	---@type UIC
 	out("Creating text_input_"..i)
 	local text_input = core:get_or_create_component("text_input_"..i, "ui/dev_ui/text_box", text_box)
 	text_input:SetCanResizeHeight(true) text_input:SetCanResizeWidth(true)
@@ -209,6 +210,7 @@ end
 function lua_console:show_line(i)
 	if not i then i = self._last_visible_line + 1 end
 
+
 	local input = find_uicomponent(self._uic, "listview", "list_clip", "list_box")
 	local line = find_uicomponent(input, "text_input_"..i)
 	if is_uicomponent(line) then
@@ -235,7 +237,7 @@ function lua_console:set_current_line(i)
 	input:SimulateLClick()
 end
 
----@return UIComponent
+---@return UIC
 function lua_console:get_text_input(i)
 	if not i then i = 1 end
 	local entry_box = find_uicomponent(self:get_uic(), "listview", "list_clip", "list_box")
@@ -271,13 +273,13 @@ function lua_console:printf(text, ...)
 	self:print(text)
 end
 
----@return UIComponent
+---@return UIC
 function lua_console:get_uic()
 	return self._uic
 end
 
----@return UIComponent Tooltip
----@return UIComponent Text
+---@return UIC Tooltip
+---@return UIC Text
 function lua_console:get_text_popup()
 	local popup = find_uicomponent(self:get_uic(), "text_popup")
 	local text = find_uicomponent(popup, "text")
@@ -313,7 +315,7 @@ function lua_console:set_visible_up_to_line(i)
 end
 
 --- Grab the final line with any user input within.
----@param visible_only boolean If we should check all lines, or just currently visible ones.
+---@param visible_only boolean? If we should check all lines, or just currently visible ones.
 ---@return integer
 function lua_console:get_last_used_line(visible_only)
 	local start = visible_only and self._last_visible_line or self._num_lines
@@ -340,11 +342,13 @@ end
 function lua_console:copy_to_clipboard()
 	local text = self:get_text(true)
 	ModLog("Copying to Clipboard: \n" .. text)
-	-- common.call_context_command("CopyStringToClipboard(\""..text.."\")")
 
-	local file = io.open("lua_console_code.lua", "w+")
-	file:write(text)
-	file:close()
+	common.set_context_value("CcoScriptObject", "LuaConsoleText", text)
+	common.call_context_command("CcoScriptObject", "LuaConsoleText", "CopyStringToClipboard(StringValue)")
+
+	-- local file = io.open("lua_console_code.lua", "w+")
+	-- file:write(text)
+	-- file:close()
 end
 
 local function string_split(str, delimiter)
